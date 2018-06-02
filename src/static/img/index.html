@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<title>FaceRecognition</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+	<script type="text/javascript" src="js/moment.js"></script>
+  	<script type="text/javascript" src="js/scanner.js"></script>
+  	<script type="text/javascript" src="js/cropper.min.js"></script>
+	<style>
+		.img-rounded {
+  		padding: 4px;
+		}
+		.thumbnail {
+			padding: 0px;
+		}
+	</style>
+</head>
+<body>
+	<div style="padding: 20px;">
+		<div class="row">
+			<div class="col-md-5" style="padding: 0px;">
+				<div class="col-md-6" style="float: left;padding: 0;">
+					<label for="exampleInputEmail1">Ảnh chứng minh thư</label>
+					<div style="border: 1px solid black;width: 250px;height: 160px;">
+						<img src="load.gif" id="loader_img_1" width="60" height="60" style="display: none;">
+						<img  id="scanned_cmt" class="img-rounded" width="250" height="160" style="display: none;">
+					</div>
+				</div>
+				
+				<div class="col-md-6" style="float: left;padding: 0;margin-bottom: 15px;">
+					<label for="exampleInputEmail1">Ảnh chụp</label>
+					<div style="border: 1px solid black;width: 250px;height: 160px;">
+						<img src="load.gif" id="loader_img_2" width="60" height="60" style="display: none;">
+						<img  id="digital_img" class="img-rounded" width="250" height="160" style="display: none;">
+					</div>
+				</div>
+
+				<div class="col-md-12" style="padding: 0;">
+					<div class="form-group">
+				    	<label for="exampleInputEmail1">Chứng minh thư</label>
+				    	<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Chứng minh thư">
+				  	</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<button type="submit" onclick="scanToJpg();" class="btn btn-primary btn-block">Scan</button>
+					</div>
+
+					<div class="col-md-6">
+						<button type="submit" class="btn btn-primary btn-block">Kiểm tra</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-5">
+				<label for="exampleInputEmail1">Video</label>
+				<img src="http://10.0.7.7:8080/video" width="auto" class="img-responsive" alt="" style="margin: 0 auto;height: 285px;"> 
+			</div>
+			
+			<div class="col-md-2">
+				<label for="exampleInputEmail1">Danh sách đen</label>
+				<div style="height: 285px;overflow-y: auto;">
+					<div class="thumbnail">
+			      		<img src="1.jpg" height="160">
+			      		<div class="caption">
+			        		<span>Thumbnail label</span>
+			      		</div>
+			    	</div>
+					<div class="thumbnail">
+			      		<img src="1.jpg" width="213" height="160">
+			      		<div class="caption">
+			        		<span>Thumbnail label</span>
+			      		</div>
+			    	</div>
+			    	<div class="thumbnail">
+			      		<img src="1.jpg" width="213" height="160">
+			      		<div class="caption">
+			        		<span>Thumbnail label</span>
+			      		</div>
+			    	</div>
+			    	<div class="thumbnail">
+			      		<img src="1.jpg" width="213" height="160">
+			      		<div class="caption">
+			        		<span>Thumbnail label</span>
+			      		</div>
+			    	</div>
+			    	<div class="thumbnail">
+			      		<img src="1.jpg" width="213" height="160">
+			      		<div class="caption">
+			        		<span>Thumbnail label</span>
+			      		</div>
+			    	</div>
+				</div>
+			</div>
+		</div>
+		
+		<hr>
+			
+		<div class="row">
+			<div class="col-md-4" style="padding: 0px;">
+				<div class="panel panel-info">
+            		<div class="panel-heading col-md-12">
+            			<div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+              				<h3 class="panel-title">Sheena Shrestha</h3>
+          				</div>
+          				<div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+          					<a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#existIdModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+          				</div>
+          				<div class="col-md-5 col-lg-5" align="right" style="padding: 0px;float: right;"> 
+              				<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+          				</div>
+          				
+            		</div>
+            		<div class="panel-body">
+              			<div class="row">
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh chứng minh thư</label>
+                				<img alt="User Pic" src="a2MftXQ.png" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh chứng minh thư</label>
+                				<img alt="User Pic" src="a2MftXQ.png" class="img-rounded img-responsive"> 
+            				</div>
+               
+                			<div class=" col-md-6 col-lg-6" style="padding: 0px;border-right: 1px solid;"> 
+                  				<table class="table table-user-information">
+                    				<tbody>
+                      					<tr>
+					                        <td>Department:</td>
+					                        <td>Programming</td>
+                      					</tr>
+                      					<tr>
+					                        <td>Hire date:</td>
+					                        <td>06/23/2013</td>
+                      					</tr>
+                      					<tr>
+					                        <td>Date of Birth</td>
+					                        <td>01/24/1988</td>
+                      					</tr>
+                   
+                         				<tr>
+                             			</tr>
+                             			<tr>
+					                        <td>Gender</td>
+					                        <td>Female</td>
+                      					</tr>
+                        				<tr>
+					                        <td>Home Address</td>
+					                        <td>Kathmandu,Nepal</td>
+                      					</tr>
+                      					<tr>
+					                        <td>Email</td>
+					                        <td><a href="mailto:info@support.com">info@support.com</a></td>
+                      					</tr>
+                        				<tr>
+                        					<td>Phone Number</td>
+                        					<td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)</td>
+                      					</tr>
+                    				</tbody>
+                  				</table>
+                			</div>
+
+                			<div class=" col-md-6 col-lg-6" style="padding: 0px;"> 
+                  				<table class="table table-user-information">
+                    				<tbody>
+                      					<tr>
+					                        <td>Department:</td>
+					                        <td>Programming</td>
+                      					</tr>
+                      					<tr>
+					                        <td>Hire date:</td>
+					                        <td>06/23/2013</td>
+                      					</tr>
+                      					<tr>
+					                        <td>Date of Birth</td>
+					                        <td>01/24/1988</td>
+                      					</tr>
+                   
+                         				<tr>
+                             			</tr>
+                             			<tr>
+					                        <td>Gender</td>
+					                        <td>Female</td>
+                      					</tr>
+                        				<tr>
+					                        <td>Home Address</td>
+					                        <td>Kathmandu,Nepal</td>
+                      					</tr>
+                      					<tr>
+					                        <td>Email</td>
+					                        <td><a href="mailto:info@support.com">info@support.com</a></td>
+                      					</tr>
+                        				<tr>
+                        					<td>Phone Number</td>
+                        					<td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)</td>
+                      					</tr>
+                    				</tbody>
+                  				</table>
+                			</div>
+              			</div>
+            		</div>
+          		</div>
+			</div>
+
+			<div class="col-md-2">
+				<label for="exampleInputEmail1">Dữ liệu mới</label>
+				<div class="thumbnail">
+		      		<img src="1.jpg" width="213" height="160">
+		    	</div>
+		    	<a href="#" class="btn btn-primary" style="width: 100%;">Báo bảo vệ</a>
+			</div>
+
+			<div class="col-md-6">
+				<canvas id="myChart" width="250" height="100"></canvas>
+			</div>
+
+			<!-- Black list -->
+			<div class="col-md-4" style="padding: 0px;">
+				<div class="panel panel-info">
+            		<div class="panel-heading col-md-12" style="background: #d9534f;color: white;">
+            			<div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+              				<h3 class="panel-title">Danh sách đen</h3>
+          				</div>
+          				<div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+          					<a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#blacklistIdModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+          				</div>
+            		</div>
+            		<div class="panel-body">
+              			<div class="row" style="margin-bottom: 10px;">
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+            					<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-12 col-lg-12" align="center"> 
+          						<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+            				</div>
+              			</div>
+              			
+              			<div class="row" style="margin-bottom: 10px;">
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+            					<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-12 col-lg-12" align="center"> 
+          						<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 90%</span>
+            				</div>
+              			</div>
+            		</div>
+          		</div>
+			</div>
+			<!-- Black list -->
+
+			<!-- New user -->
+			<div class="col-md-4" style="padding: 0px;">
+				<div class="panel panel-info">
+            		<div class="panel-heading col-md-12" style="background: #f0ad4e;color: white;">
+            			<div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+              				<h3 class="panel-title">Khách hàng mới</h3>
+          				</div>
+          				<div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+          					<a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#newUserModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+          				</div>
+            		</div>
+            		<div class="panel-body">
+              			<div class="row" style="margin-bottom: 10px;">
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+            					<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-12 col-lg-12" align="center"> 
+          						<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+            				</div>
+              			</div>
+            		</div>
+
+            		<div class="panel-heading col-md-12" style="background: #f0ad4e;color: white;">
+            			<div class="col-md-11 col-lg-11" align="left" style="padding: 0px;"> 
+              				<h3 class="panel-title">Kiểm tra người dùng trong hệ thống</h3>
+          				</div>
+          				<div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+          					<a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#checkIdModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+          				</div>
+            		</div>
+            		<div class="panel-body">
+              			<div class="row" style="margin-bottom: 10px;">
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+            					<label for="exampleInputEmail1">Sheena Shrestha</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-12 col-lg-12" align="center"> 
+          						<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+            				</div>
+              			</div>
+            		</div>
+          		</div>
+			</div>
+			<!-- New user -->
+		</div>
+
+	</div>
+
+	<!-- Người dùng tồn tại trong hệ thống -->
+	<div id="existIdModal" class="modal fade" role="dialog">
+  		<div class="modal-dialog" style="width: 60%;">
+
+    		<!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header" style="background: #5cb85c;color: white;">
+        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        			<div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+              				<h3 class="panel-title">Sheena Shrestha</h3>
+          				</div>
+          				<div class="col-md-5 col-lg-5" align="right" style="padding: 0px;float: right;"> 
+              				<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+          				</div>
+      			</div>
+      			<div class="modal-body" style="padding: 0 15px;">
+        			<div class="row">
+        				<div class=" col-md-5 col-lg-5" style="padding: 0px;"> 
+              				<table class="table table-user-information">
+                				<tbody>
+                  					<tr>
+				                        <td>Department:</td>
+				                        <td>Programming</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Hire date:</td>
+				                        <td>06/23/2013</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Date of Birth</td>
+				                        <td>01/24/1988</td>
+                  					</tr>
+               
+                     				<tr>
+                         			</tr>
+                         			<tr>
+				                        <td>Gender</td>
+				                        <td>Female</td>
+                  					</tr>
+                    				<tr>
+				                        <td>Home Address</td>
+				                        <td>Kathmandu,Nepal</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Email</td>
+				                        <td><a href="mailto:info@support.com">info@support.com</a></td>
+                  					</tr>
+                    				<tr>
+                    					<td>Phone Number</td>
+                    					<td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)</td>
+                  					</tr>
+                				</tbody>
+              				</table>
+            			</div>
+
+            			<div class=" col-md-7 col-lg-7" style="border-left: 1px solid #e5e5e5;"> 
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">CMT cũ</label>
+                				<img alt="User Pic" src="a2MftXQ.png" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">CMT mới</label>
+                				<img alt="User Pic" src="a2MftXQ.png" class="img-rounded img-responsive"> 
+            				</div>
+
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh cũ</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh mới</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh cũ</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh mới</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+              			</div>
+      				</div>
+  				</div>
+      			<div class="modal-footer">
+      				<button type="button" class="btn btn-danger">Báo bảo vệ</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">Tiếp tục theo dõi</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
+
+	<!-- Danh sách đen -->
+	<div id="blacklistIdModal" class="modal fade" role="dialog">
+  		<div class="modal-dialog">
+
+    		<!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header" style="background: #d9534f;color: white;">
+        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        			<div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+          				<h3 class="panel-title">Danh sách đen</h3>
+      				</div>	
+      			</div>
+      			<div class="modal-body" style="padding: 0 15px;">
+        			<div class="row" style="margin-bottom: 10px;">
+            			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+            				<label for="exampleInputEmail1">Sheena Shrestha</label>
+            				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+        				</div>
+        				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+        					<label for="exampleInputEmail1">Sheena Shrestha</label>
+            				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+        				</div>
+        				<div class="col-md-12 col-lg-12" align="center"> 
+      						<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+        				</div>
+          			</div>
+              			
+          			<div class="row" style="margin-bottom: 10px;">
+            			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+            				<label for="exampleInputEmail1">Sheena Shrestha</label>
+            				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+        				</div>
+        				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+        					<label for="exampleInputEmail1">Sheena Shrestha</label>
+            				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+        				</div>
+        				<div class="col-md-12 col-lg-12" align="center"> 
+      						<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 90%</span>
+        				</div>
+          			</div>
+  				</div>
+      			<div class="modal-footer">
+      				<button type="button" class="btn btn-danger">Báo bảo vệ</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
+
+	<!-- New user -->
+	<div id="newUserModal" class="modal fade" role="dialog">
+  		<div class="modal-dialog">
+
+    		<!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header" style="background: #f0ad4e;color: white;">
+        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        			<div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+          				<h3 class="panel-title">Khách hàng mới</h3>
+      				</div>	
+      			</div>
+      			<div class="modal-body" style="padding: 0 15px;">
+        			<div class="row" style="margin-bottom: 10px;">
+            			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+            				<label for="exampleInputEmail1">Sheena Shrestha</label>
+            				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+        				</div>
+        				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+        					<label for="exampleInputEmail1">Sheena Shrestha</label>
+            				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+        				</div>
+        				<div class="col-md-12 col-lg-12" align="center"> 
+      						<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+        				</div>
+          			</div>
+  				</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-warning">Kiểm tra dữ liệu người dùng</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">Tiếp tục theo dõi</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
+
+	<!-- Kiểm tra người dùng -->
+	<div id="checkIdModal" class="modal fade" role="dialog">
+  		<div class="modal-dialog" style="width: 60%;">
+
+    		<!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header" style="background: #d9534f;color: white;">
+        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        			<div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+              				<h3 class="panel-title">Sheena Shrestha</h3>
+          				</div>
+          				<div class="col-md-5 col-lg-5" align="right" style="padding: 0px;float: right;"> 
+              				<span class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 80%</span>
+          				</div>
+      			</div>
+      			<div class="modal-body" style="padding: 0 15px;">
+        			<div class="row">
+        				<div class=" col-md-6 col-lg-6" style="border-left: 1px solid #e5e5e5;"> 
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">CMT mới</label>
+                				<img alt="User Pic" src="a2MftXQ.png" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh mới</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+
+            				<table class="table table-user-information">
+                				<tbody>
+                  					<tr>
+				                        <td>Department:</td>
+				                        <td>Programming</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Hire date:</td>
+				                        <td>06/23/2013</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Date of Birth</td>
+				                        <td>01/24/1988</td>
+                  					</tr>
+               
+                     				<tr>
+                         			</tr>
+                         			<tr>
+				                        <td>Gender</td>
+				                        <td>Female</td>
+                  					</tr>
+                    				<tr>
+				                        <td>Home Address</td>
+				                        <td>Kathmandu,Nepal</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Email</td>
+				                        <td><a href="mailto:info@support.com">info@support.com</a></td>
+                  					</tr>
+                    				<tr>
+                    					<td>Phone Number</td>
+                    					<td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)</td>
+                  					</tr>
+                				</tbody>
+              				</table>
+              			</div>
+
+              			<div class=" col-md-6 col-lg-6" style="border-left: 1px solid #e5e5e5;"> 
+                			<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">CMT cũ</label>
+                				<img alt="User Pic" src="a2MftXQ.png" class="img-rounded img-responsive"> 
+            				</div>
+            				<div class="col-md-6 col-lg-6" align="center" style="padding: 0px;"> 
+                				<label for="exampleInputEmail1">Ảnh cũ</label>
+                				<img alt="User Pic" src="1.jpg" class="img-rounded img-responsive"> 
+            				</div>
+
+            				<table class="table table-user-information">
+                				<tbody>
+                  					<tr>
+				                        <td>Department:</td>
+				                        <td>Programming</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Hire date:</td>
+				                        <td>06/23/2013</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Date of Birth</td>
+				                        <td>01/24/1988</td>
+                  					</tr>
+               
+                     				<tr>
+                         			</tr>
+                         			<tr>
+				                        <td>Gender</td>
+				                        <td>Female</td>
+                  					</tr>
+                    				<tr>
+				                        <td>Home Address</td>
+				                        <td>Kathmandu,Nepal</td>
+                  					</tr>
+                  					<tr>
+				                        <td>Email</td>
+				                        <td><a href="mailto:info@support.com">info@support.com</a></td>
+                  					</tr>
+                    				<tr>
+                    					<td>Phone Number</td>
+                    					<td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)</td>
+                  					</tr>
+                				</tbody>
+              				</table>
+              			</div>
+      				</div>
+  				</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-danger">Báo bảo vệ</button>
+        			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
+
+	<script type="text/javascript">
+		$("document").ready(function(){
+			setInterval('adddata()', 1000);
+		});
+
+		var canvas = document.getElementById('myChart');
+		var data = {
+		  labels: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+		  datasets: [{
+		    label: "My First dataset",
+		    fill: false,
+		    lineTension: 0.2,
+		    backgroundColor: "rgba(75,192,192,0.4)",
+		    borderColor: "rgba(75,192,192,1)",
+		    borderCapStyle: 'butt',
+		    borderDash: [],
+		    borderDashOffset: 0.0,
+		    borderWidth: 1,
+		    borderJoinStyle: 'miter',
+		    pointBorderColor: "rgba(75,192,192,1)",
+		    pointBackgroundColor: "#fff",
+		    pointBorderWidth: 1,
+		    pointHoverRadius: 5,
+		    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+		    pointHoverBorderColor: "rgba(220,220,220,1)",
+		    pointHoverBorderWidth: 2,
+		    pointRadius: 0,
+		    pointHitRadius: 10,
+		    data: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+		  }]
+		};
+
+		function adddata() {
+			myLineChart.data.datasets[0].data.shift();
+		  	myLineChart.data.labels.shift();
+		 	myLineChart.data.datasets[0].data.push(Math.floor((Math.random() * 100) + 1));
+		  	var ctime = new Date();
+		  	var csecs = moment(ctime).format("s");
+		  	if (csecs % 15 === 0) {
+		    	var label = csecs == '0' ? moment(ctime).format("mm:ss") : moment(ctime).format(":ss");
+		    	myLineChart.data.labels.push(label);
+		  	} else {
+		    	myLineChart.data.labels.push('');
+		  	}
+		  
+		  	myLineChart.update();
+
+		}
+
+		var option = {
+		  	showLines: true,
+		  	animation: false,
+		  	legend: {
+		    	display: false
+		  	},
+		  	scales: {
+		    	yAxes: [{
+		      	ticks: {
+		        	max: 100,
+		        	min: 0,
+		        	stepSize: 50
+		      	},
+		      	gridLines: {
+		        	drawTicks: false
+		      	}
+		    }],
+		    xAxes: [{
+		      	gridLines: {
+		        	display: true,
+		        	drawTicks: false
+		      	},
+		      	ticks: {
+		        	fontSize: 10,
+		        	maxRotation: 10,
+		        	callback: function(value) {
+			          	if (value.toString().length > 0) {
+			            	return value;
+			          	} else {return null};
+		        	}
+		      	}
+		    }]
+		  	}
+		};
+		var myLineChart = Chart.Line(canvas, {
+		  	data: data,
+		  	options: option
+		});
+	</script>
+
+	<!-- script scan -->
+  	<script>
+  		// -------------- Optional status display, depending on JQuery --------------
+        function displayStatus(loading, mesg, clear) {
+            if(loading) {
+                $('#info').html((clear ? '' : $('#info').html()) + '<p><img src="https://asprise.com/legacy/product/_jia/applet/loading.gif" style="vertical-align: middle;" hspace="8"> ' + mesg + '</p>');
+            } else {
+                $('#info').html((clear ? '' : $('#info').html()) + mesg);
+            }
+        }
+
+        function getLang() {
+            return $("#lang").val();
+        }
+
+        function scanToJpg() {
+        	$("#scanned_cmt").hide();
+        	$("#loader_img_1").show();
+            scanner.scan(displayImagesOnPage,
+                {
+                    "output_settings": [
+                        {
+                            "type": "return-base64",
+                            "format": "jpg"
+                        }
+                    ]
+                }
+            );
+        }
+
+        /** Returns true if it is successfully or false if failed and reports error. */
+        function checkIfSuccessfully(successful, mesg, response) {
+            displayStatus(false, '', true);
+            if(successful && mesg != null && mesg.toLowerCase().indexOf('user cancel') >= 0) { // User cancelled.
+                displayStatus(false, '<pre>' + "User cancelled." + '</pre>', true);
+                return false;
+            } else if(!successful) {
+                displayStatus(false, '<pre>' + "Failed: " + mesg + "\n" + response + '</pre>', true);
+                return false;
+            }
+            return true;
+        }
+
+        /** Processes the scan result */
+        function displayImagesOnPage(successful, mesg, response) {
+            if(!successful) { // On error
+                console.error('Failed: ' + mesg);
+                return;
+            }
+
+            if(successful && mesg != null && mesg.toLowerCase().indexOf('user cancel') >= 0) { // User cancelled.
+                console.info('User cancelled');
+                return;
+            }
+
+            var scannedImages = scanner.getScannedImages(response, true, false); // returns an array of ScannedImage
+            for(var i = 0; (scannedImages instanceof Array) && i < scannedImages.length; i++) {
+                var scannedImage = scannedImages[i];
+                processScannedImage(scannedImage);
+            }
+        }
+
+        /** Images scanned so far. */
+        var imagesScanned = [];
+
+        /** Processes a ScannedImage */
+        function processScannedImage(scannedImage) {
+        	$("#loader_img_1").hide();
+            $("#scanned_cmt").show();
+            document.getElementById("scanned_cmt").src = scannedImage.src;
+
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>FaceRecognition</title>
+    
+    <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="static/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.simpleWeather.min.js"></script>  
+    <style>
+        .label-default{
+            background-color: transparent;
+            border: 2px solid white;
+        }
+        .person_box{
+            position: absolute;
+            top: 65px;
+            right: 0px;
+            width: 350px;
+        }
+        .person_box_1{
+            position: absolute;
+            top: 65px;
+            left: 20px;
+            width: 350px;
+        }
+        .person_box_2{
+            position: absolute;
+            top: 65px;
+            left: 390px;
+            width: 350px;
+        }
+        .person_box_3{
+            position: absolute;
+            top: 65px;
+            left: 760px;
+            width: 350px;
+        }
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            height: 500px;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        .container_card {
+            padding: 30px 16px;
+        }
+        .headr{
+            width: 100%;
+            height: 15px;
+            background: #1A68B4;
+        }
+        .img-avatar{
+            width: 100%;
+            padding: 40px 50px;
+            border-radius: 50%;
+        }
+        .content-card{
+            background: #16A0FE;
+            height:70%;
+        }
+        .content-card::after{
+            content: "\e013";
+            background: #32F1AD;
+            color: white;
+            width: 45px;
+            height: 45px;
+            position: absolute;
+            font-size: 20px;
+            font-family: 'Glyphicons Halflings';
+            left: 42%;
+            text-align: center;
+            border-radius: 50%;
+            line-height: 45px;
+        }
+        #clockbox{
+            padding: 35px 0px;
+            color: white;
+            text-align: center;
+        }
+        #clockbox_time{
+            font-size: 50px;
+        }
+        #clockbox_date{
+            margin-top: 0px;
+        }
+        #weather {
+            margin: 0px auto;
+            text-transform: uppercase;
+        }
+
+        i {
+            color: #fff;
+            font-family: weather;
+            font-size: 150px;
+            font-weight: normal;
+            font-style: normal;
+            line-height: 1.0;
+        }
+
+        #weather h2 {
+            margin: 10px 0 8px;
+            color: #fff;
+            font-size: 100px;
+            font-weight: 300;
+            text-align: center;
+            text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
+        }
+
+        #weather ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        #weather li {
+            background: #fff;
+            background: rgba(255,255,255,0.90);
+            padding: 20px;
+            display: inline-block;
+            border-radius: 5px;
+        }
+
+        #weather .currently {
+            margin: 0 20px;
+        }
+    </style>
+</head>
+<body style="background: #148DF9;">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="col-lg-12" style="margin-bottom:60px;">
+            <h1 style="color: white;" onclick="popUpClick();"><span class="label label-default">Face</span> ID</h1>
+        </div>
+        <div class="col-lg-12">
+            <div class="col-md-3" style="padding: 0px;">
+                <div class="col-md-12" style="height:216px;background-image: url(static/img/clock.jpg);background-size: cover;">
+                    <div id="clockbox">
+                        <h1 id=clockbox_time></h1>
+                        <h3 id="clockbox_date"></h3>
+                    </div>
+                </div>
+                <div id="weather" class="col-md-12" style="height:216px;background-image: url(static/img/weather.jpg);background-size: cover;">
+
+                </div>
+                <div class="col-md-12" style="height:216px;background: pink;">
+                        
+                </div>
+            </div>
+            <div class="col-md-9" style="padding:0px;" style="background: blue;" id="cam_box">
+                <img src="http://192.168.1.23:8080/video" width="auto" class="img-responsive" style="width:100%;"> 
+                
+                <div class="person_box_origin person_box" style="display: none;">
+                    <div class="card" style="background: #1D69B7;">
+                        <div class="headr"></div>
+                        <div class="content-card">
+                            <img src="../static/img/img_avatar.png" alt="Avatar" style="width:100%" class="img-avatar">
+                        </div>
+                        <div class="container_card" style="background: #1D69B7;color: white;text-align: center;">
+                            <h4><b>John Doe</b></h4> 
+                            <p>Architect & Engineer</p> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        
+    </div>
+
+    <script type="text/javascript">
+    	var API = "/";
+    	var count = 0;
+        tday = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+        tmonth = new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+
+        function GetClock(){
+            var d = new Date();
+            var nday = d.getDay(), nmonth = d.getMonth(), ndate = d.getDate(), nyear = d.getFullYear();
+            var nhour = d.getHours(), nmin = d.getMinutes(), nsec = d.getSeconds(), ap;
+
+            if(nhour == 0){ap = " AM"; nhour = 12;}
+            else if(nhour < 12){ap = " AM";}
+            else if(nhour == 12){ap = " PM";}
+            else if(nhour > 12){ap = " PM"; nhour -= 12;}
+
+            if(nmin <= 9) nmin = "0" + nmin;
+            if(nsec <= 9) nsec = "0" + nsec;
+
+            $('#clockbox_time').text(nhour + ":" + nmin + ":" + nsec + ap);
+            $('#clockbox_date').text(tday[nday] + ", " + tmonth[nmonth] + " " + ndate + ", " + nyear);
+        }
+
+        function GetWeather(){
+        	$.simpleWeather({
+                location: 'HANOI, VN',
+                woeid: '',
+                unit: 'c',
+                success: function(weather) {
+                    html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
+  
+                    $("#weather").html(html);
+                },
+                error: function(error) {
+                    $("#weather").html('<p>'+error+'</p>');
+                }
+            });
+        }
+
+        function capturePerson(){
+        	$.ajax({
+		        type: "POST",
+		        url: API + "classifier",
+		        processData: false,
+		        contentType: false,
+		        success: function (data) {
+		            console.log(data["message"]);
+                    if(data["message"] == "NONE"){
+
+                    }
+                    else if(data["message"].split("|").length > 1){
+		            	name = data["message"].split("|")[0];
+		            	prob = data["message"].split("|")[1];
+		            	link = data["message"].split("|")[2];
+		            	popUpClick(name, parseFloat(prob * 100).toFixed(2), link);
+		            }else{
+		            	link = data["message"].split("|")[0];
+		            	popUpClick("Người lạ", "0", link);
+		            }
+		            
+		        }
+		    });
+        }
+
+        function popUpClick(name, prob, link){
+        	var currentdate = new Date(); 
+			var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+            preson_box_div = $(".person_box_origin").clone().attr('id', 'person_box_' + count).removeClass("person_box_origin");
+            preson_box_div.find("p").text("Thời gian : " + datetime);
+            preson_box_div.find("b").text(name + " (" + prob + "%)");
+            preson_box_div.find(".img-avatar").attr("src", link);
+
+            $("#cam_box").append(preson_box_div)
+        	$('#person_box_' + count).show();
+            var left = $('#person_box_' + count).offset().left;
+
+            if(count <= 2){
+            	if(count % 3 == 0){
+					$('#person_box_' + count).css({left:left}).animate({"left":"20px"}, "slow");
+	            }
+	            else if(count % 3 == 1){
+	                $('#person_box_' + count).css({left:left}).animate({"left":"390px"}, "slow");
+	                
+	            }else{
+	                $('#person_box_' + count).css({left:left}).animate({"left":"760px"}, "slow");
+	            }
+            }
+            else{
+            	count_0 = count - 3;
+            	count_1 = count - 2;
+            	count_2 = count - 1;
+
+            	left_0 = $('#person_box_' + count_1).offset().left;
+            	left_1 = $('#person_box_' + count_2).offset().left;
+
+            	$('#person_box_' + count_0).remove();
+            	$('#person_box_' + count_1).css({left:left_0}).animate({"left":"20px"}, "slow");
+            	$('#person_box_' + count_2).css({left:left_1}).animate({"left":"390px"}, "slow");
+            	$('#person_box_' + count).css({left:left}).animate({"left":"760px"}, "slow");
+            }
+            
+            count += 1;
+        }
+
+        window.onload = function(){
+            GetClock();
+            GetWeather();
+            capturePerson();
+            setInterval(GetClock, 1000);
+            setInterval(capturePerson, 10000);
+            setInterval(GetWeather, 3600000);
+        }
+    </script>
+</body>
+</html>
