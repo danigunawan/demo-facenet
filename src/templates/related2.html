@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>FaceRecognition</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+    <script type="text/javascript" src="static/js/moment.js"></script>
+    <script type="text/javascript" src="static/js/scanner.js"></script>
+    <script type="text/javascript" src="static/js/cropper.min.js"></script>
+    <style>
+        .img-rounded {
+        padding: 4px;
+        }
+        .thumbnail {
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 20px;">
+        <div class="row">
+            <div class="col-md-5" style="padding: 0px;">
+                <div class="col-md-6" style="float: left;padding: 0;">
+                    <label for="exampleInputEmail1">Ảnh chứng minh thư</label>
+                    <div style="border: 1px solid black;width: 250px;height: 160px;">
+                        <img src="static/img/load.gif" id="loader_img_1" width="60" height="60" style="display: none;">
+                        <img  id="scanned_cmt" class="img-rounded" width="250" height="160" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="col-md-6" style="float: left;padding: 0;margin-bottom: 15px;">
+                    <label for="exampleInputEmail1">Ảnh chụp</label>
+                    <div style="border: 1px solid black;width: 250px;height: 160px;">
+                        <img src="static/img/load.gif" id="loader_img_2" width="60" height="60" style="display: none;">
+                        <img  id="digital_img" class="img-rounded" width="250" height="160" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="padding: 0;">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Chứng minh thư</label>
+                        <input type="text" class="form-control" id="chungminhthu" placeholder="Chứng minh thư">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" onclick="scanToJpg();" class="btn btn-primary btn-block">Scan</button>
+                    </div>
+
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-block" onclick="savedata_callback();">Kiểm tra</button>
+                    </div>
+
+                    <div class="col-md-12" style="margin-top: 10px;">
+                        <button type="submit" id="finishTransaction" disabled="disabled" class="btn btn-primary btn-block" onclick="finish_callback();">Kết thúc giao dịch</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-5">
+                <label for="exampleInputEmail1">Video</label>
+                <img src="http://10.0.7.7:8080/video" width="auto" class="img-responsive" alt="" style="margin: 0 auto;height: 325px;"> 
+            </div>
+            
+            <div class="col-md-2">
+                <label for="exampleInputEmail1">Danh sách đen</label>
+                <div style="height: 325px;overflow-y: auto;">
+                   
+                    
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+            
+        <div class="row">
+            <div class="alert alert-success" id="process" style="display: none;text-align: center;">
+                <strong ></strong>
+            </div>
+
+            <div id="exist_user_result" class="col-md-5" style="padding: 0px;display: none;">
+                <div class="panel panel-info">
+                    <div class="panel-heading col-md-12">
+                        <div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+                            <h3 class="panel-title" id="exist_name">Sheena Shrestha</h3>
+                        </div>
+                        <div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+                            <a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#existIdModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                        </div>
+                        <div class="col-md-5 col-lg-5" align="right" style="padding: 0px;float: right;"> 
+                            <span class="label label-success" style="display: block;font-size: 16px;" id="exist_best_score">Giống nhau: 80%</span>
+                        </div>
+                        
+                    </div>
+                    <div class="panel-body">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Black list -->
+            <div id="black_list_result" class="col-md-5" style="padding: 0px;display: none;">
+                <div class="panel panel-info">
+                    <div class="panel-heading col-md-12" style="background: #d9534f;color: white;">
+                        <div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+                            <h3 class="panel-title">Danh sách đen</h3>
+                        </div>
+                        <div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+                            <a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#blacklistIdModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- Black list -->
+
+            <!-- New user -->
+            <div id="new_user_result" class="col-md-5" style="padding: 0px;display: none;">
+                <div class="panel panel-info">
+                    <div class="panel-heading col-md-12" style="background: #f0ad4e;color: white;">
+                        <div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+                            <h3 class="panel-title">Khách hàng mới</h3>
+                        </div>
+                        <div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+                            <a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#newUserModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body" id="check_new_user">
+                        
+                    </div>
+
+                    <div class="panel-heading col-md-12" style="background: #f0ad4e;color: white;">
+                        <div class="col-md-11 col-lg-11" align="left" style="padding: 0px;"> 
+                            <h3 class="panel-title">Kiểm tra người dùng trong hệ thống</h3>
+                        </div>
+                        <div class="col-md-1 col-lg-1" style="padding: 0px;float: right;">
+                            <a class="col-md-1 col-lg-1" data-toggle="modal" data-target="#checkIdModal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body" id="check_fake_user" style="height: 400px; overflow-y: auto;">
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- New user -->
+
+            <div class="col-md-2" id="div_realtime" style="display: none;">
+                <label for="exampleInputEmail1" >Dữ liệu mới</label>
+                <div class="thumbnail">
+                    <img src="static/img/1.jpg" width="213" height="160" id="img_realtime">
+                </div>
+                <a class="btn btn-primary" style="width: 100%;">Báo bảo vệ</a>
+                
+            </div>
+
+            <div class="col-md-5" id="myChartDiv" style="display: none;">
+                <canvas id="myChart" width="250" height="100"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Người dùng tồn tại trong hệ thống -->
+    <div id="existIdModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 60%;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background: #5cb85c;color: white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-md-5 col-lg-5 col-md-offset-4" align="left" style="padding: 0px;"> 
+                        <div style="width: 64px;height: 64px;margin: auto;background: url('static/img/correct.png') no-repeat center center;">
+                        </div>
+                        <h3 class="panel-title" style="text-align: center;">Khách hàng đã giao dịch ở hệ thống</h3>
+                        <h3 id="existModalBestScore" class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 35.50%</h3>
+                    </div>
+                </div>
+                <div class="modal-body" style="padding: 0 15px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Báo bảo vệ</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="existIdKeepTracking">Tiếp tục theo dõi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách đen -->
+    <div id="blacklistIdModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background: #d9534f;color: white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-md-6 col-lg-6 col-md-offset-3" align="left" style="padding: 0px;"> 
+                        <div style="width: 64px;height: 64px;margin: auto;background: url('static/img/alert.png') no-repeat center center;">
+                        </div>
+                        <h3 class="panel-title" style="text-align: center;">Khách hàng có trong danh sách đen</h3>
+                        <h3 id="blacklist_best_score" class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 35.50%</h3>
+                    </div>  
+                </div>
+                <div class="modal-body" style="padding: 0 15px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Báo bảo vệ</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="blacklistKeepTracking">Tiếp tục theo dõi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New user -->
+    <div id="newUserModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background: #f0ad4e;color: white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-md-5 col-lg-5 col-md-offset-4" align="left" style="padding: 0px;"> 
+                        <div style="width: 64px;height: 64px;margin: auto;background: url('static/img/add-new-user.png') no-repeat center center;">
+                        </div>
+                        <h3 class="panel-title" style="text-align: center;">Khách hàng mới</h3>
+                        <h3 id="new_user_best_score" class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 35.50%</h3>
+                    </div>  
+                </div>
+                <div class="modal-body" style="padding: 10px 15px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" onclick="check_fake_user_callback();" data-dismiss="modal">Kiểm tra dữ liệu người dùng</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="newUserModalKeepTracking">Tiếp tục theo dõi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kiểm tra người dùng -->
+    <div id="checkIdModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 60%;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background: #d9534f;color: white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+                            <h3 class="panel-title">Kiểm tra người dùng trong hệ thống</h3>
+                        </div>
+                </div>
+                <div class="modal-body" style="padding: 0 15px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Báo bảo vệ</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="static/js/callback.js"></script>
+</body>
+</html>

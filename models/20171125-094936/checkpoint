@@ -1,0 +1,4 @@
+model_checkpoint_path: "/home/thinh_nguyenngoc/facenet/models/20171125-094936/model-20171125-094936.ckpt-80000"
+all_model_checkpoint_paths: "/home/thinh_nguyenngoc/facenet/models/20171125-094936/model-20171125-094936.ckpt-78000"
+all_model_checkpoint_paths: "/home/thinh_nguyenngoc/facenet/models/20171125-094936/model-20171125-094936.ckpt-79000"
+all_model_checkpoint_paths: "/home/thinh_nguyenngoc/facenet/models/20171125-094936/model-20171125-094936.ckpt-80000"

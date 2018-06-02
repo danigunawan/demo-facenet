@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>FaceRecognition</title>
+    
+    <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/css/site_global.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/master_a-master.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/master_result---warning.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/result---warning.css" id="pagesheet"/>
+    <link rel="stylesheet" type="text/css" href="static/css/finish.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/master_finish.css"/>
+
+    <script type="text/javascript" src="static/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/Chart.min.js"></script>
+    <script type="text/javascript" src="static/js/moment.js"></script>
+    <script type="text/javascript" src="static/js/scanner.js"></script>
+    <script type="text/javascript" src="static/js/cropper.min.js"></script>
+    <style>
+        .img-rounded {
+            padding: 4px;
+        }
+        .thumbnail {
+            padding: 0px;
+        }
+        body{
+            overflow-y: hidden;
+            background-color: #DBE0E0;
+            padding: 0;
+        }
+        .colelem{
+            clear: inherit; 
+        }
+        .label-success {
+            background-color: #9DD7F9;
+        }
+        .btn-warning {
+            color: #fff;
+            background-color: #FB4D4D;
+            border-color: #FB4D4D;
+        }
+        .progress_active{
+            background-color: #9DD7F9 !important;
+        }
+        .label_header{
+            background-color: #82B2CE;
+            color: white;
+            /* width: 250px; */
+            text-align: center;
+            color: #FFFFFF;
+            padding: 22px;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 17px;
+            font-weight: bold;
+            border-color: transparent;
+            -webkit-transform-origin: left top;
+            -ms-transform-origin: left top;
+            -o-transform-origin: left top;
+            transform-origin: left top;
+            background-repeat: no-repeat;
+        }
+        .border_img{
+            border: 1px solid black;
+            width: 250px;
+            height: 160px;
+            margin: 0 auto;
+        }
+        .w3-container{
+            padding: 5px;
+        }
+        .w3-card-4, .w3-hover-shadow:hover{
+            box-shadow: 0 0px 0px 0 rgba(0,0,0,0.2), 0 0px 1px 0 rgba(0,0,0,0.19);
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 0px 20px;">
+        <div class="row">
+            <div class="col-md-5" style="padding: 0px;background: #fff;">
+                <div class="col-md-6" style="float: left;padding: 0;">
+                    <div for="exampleInputEmail1" class="label_header" style="margin-bottom: 15px;">Ảnh chứng minh thư</div>
+                    <div class="border_img">
+                        <img src="static/img/load.gif" id="loader_img_1" width="60" height="60" style="display: none;margin-left: 35%;margin-top: 20%;">
+                        <img  id="scanned_cmt" class="img-rounded" width="250" height="160" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="col-md-6" style="float: left;padding: 0;margin-bottom: 11px;">
+                    <div for="exampleInputEmail1" class="label_header" style="margin-bottom: 15px;">Ảnh chụp</div>
+                    <div class="border_img">
+                        <img src="static/img/load.gif" id="loader_img_2" width="60" height="60" style="display: none;margin-left: 35%;margin-top: 20%;">
+                        <img id="digital_img" class="img-rounded" width="250" height="160" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="padding: 0px 23px;">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Chứng minh thư</label>
+                        <input type="text" class="form-control" id="chungminhthu" placeholder="Chứng minh thư">
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="padding: 0px 10px 15px 10px;">
+                    <div class="col-md-6">
+                        <button type="submit" onclick="savedata_callback();" class="btn btn-primary btn-block">Scan</button>
+                    </div>
+
+                    <div class="col-md-6">
+                        <button type="submit" id="finishTransaction" disabled="disabled" class="btn btn-primary btn-block" onclick="finish_callback();">Kết thúc giao dịch</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div for="exampleInputEmail1" class="label_header" style="margin: 0 4px;">Video</div>
+                <img src="http://192.168.1.5:8081" width="auto" class="img-responsive" alt="" style="margin: 0 auto;height: 306px;"> 
+            </div>
+            
+            <div class="col-md-3" style="padding: 0px;">
+                <div style="height: 367px;overflow-y: auto;background-color: #FFFFFF;">
+                    <div class="clearfix grpelem" style="float: none;"><!-- column -->
+                        <div class="clearfix colelem" id="u5669"><!-- group -->
+                            <div class="clearfix grpelem" id="u5695-4"><!-- content -->
+                                <p style="cursor:pointer;" data-toggle="modal" data-target="#addBlackList">DANH SÁCH ĐEN</p>
+                            </div>
+                        </div>
+                        <div id="blackListList">
+
+                        </div>
+                        
+                    </div>    
+                </div>
+            </div>
+        </div>
+        
+        <hr style="border-top: 1px solid #82B2CE;margin: 10px 0px;">
+        
+        <div class="row">
+            <div class="clearfix colelem" id="u6102-4"><!-- content -->
+                <p>KẾT QUẢ QUÉT</p>
+            </div>
+            
+            <div class="clearfix" id="u189_align_to_page">
+                <div class="clearfix colelem" id="pu760"><!-- group -->
+                    <div class="grpelem" id="u760"><!-- simple frame --></div>
+                    <a class="nonblock nontext Button clearfix grpelem" id="buttonu1404" href="#"><!-- container box --><div class="grpelem" id="u1406"><!-- simple frame --></div></a>
+                    <a class="nonblock nontext Button clearfix grpelem" id="buttonu1487" href="#"><!-- container box --><div class="grpelem" id="u1488"><!-- simple frame --></div></a>
+                    <a class="nonblock nontext Button clearfix grpelem" id="buttonu1496" href="#"><!-- container box --><div class="grpelem" id="u1497"><!-- simple frame --></div></a>
+                    <a class="nonblock nontext Button clearfix grpelem" id="buttonu1505" href="#"><!-- container box --><div class="grpelem" id="u1506"><!-- simple frame --></div></a>
+                    <a class="nonblock nontext grpelem" id="u1413" href="index.html"><!-- simple frame --></a>
+                    <a class="nonblock nontext rounded-corners grpelem" id="u5964" href="#"><!-- simple frame --></a>
+                </div>
+                <div class="clearfix colelem" id="pu1428-4"><!-- group -->
+                    <div class="clearfix grpelem" id="u1428-4"><!-- content -->
+                        <p>Scan CMT</p>
+                    </div>
+                    <div class="clearfix grpelem" id="u763-4"><!-- content -->
+                        <p>Chụp ảnh mặt</p>
+                    </div>
+                    <div class="clearfix grpelem" id="u786-4"><!-- content -->
+                        <p>Danh sách đen</p>
+                    </div>
+                    <div class="clearfix grpelem" id="u791-4"><!-- content -->
+                        <p>Kiểm tra ID</p>
+                    </div>
+                    <div class="clearfix grpelem" id="u840-4"><!-- content -->
+                        <p>Realtime</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2" id="label_result" data-toggle="modal" data-target="#myModal" style="display: none;">
+                <div class="clearfix colelem" id="ppu3862"><!-- group -->
+                    
+                    <div class="rgba-background grpelem" id="u3861"><!-- content -->
+                        <div class="fluid_height_spacer"></div>
+                    </div>
+                    <div class="clip_frame grpelem" id="u4488"><!-- image -->
+                        <img class="block" id="u4488_img" src="static/images/check-mark--crop-u4488.png?crc=3822812632" alt="" data-image-width="63" data-image-height="59">
+                    </div>
+                    <div class="clearfix grpelem" id="u4993-6"><!-- content -->
+                        <p>CLEAN: Người này không nằm trong danh sách đen</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2" id="div_realtime" style="display: none;">
+                <div class="thumbnail">
+                    <img src="static/img/1.jpg" width="213" height="160" id="img_realtime">
+                </div>
+                <a class="btn btn-primary" style="width: 100%;">Báo bảo vệ</a>
+                
+            </div>
+
+            <div class="col-md-5" id="myChartDiv" style="display: none;">
+                <canvas id="myChart" width="250" height="100"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Người dùng tồn tại trong hệ thống -->
+    <div id="existIdModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 60%;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background: #5cb85c;color: white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-md-5 col-lg-5 col-md-offset-4" align="left" style="padding: 0px;"> 
+                        <div style="width: 64px;height: 64px;margin: auto;background: url('static/img/correct.png') no-repeat center center;">
+                        </div>
+                        <h3 class="panel-title" style="text-align: center;">Khách hàng đã giao dịch ở hệ thống</h3>
+                        <h3 id="existModalBestScore" class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 35.50%</h3>
+                    </div>
+                </div>
+                <div class="modal-body" style="padding: 0 15px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Báo bảo vệ</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="existIdKeepTracking">Tiếp tục theo dõi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New user -->
+    <div id="newUserModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background: #f0ad4e;color: white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-md-5 col-lg-5 col-md-offset-4" align="left" style="padding: 0px;"> 
+                        <div style="width: 64px;height: 64px;margin: auto;background: url('static/img/add-new-user.png') no-repeat center center;">
+                        </div>
+                        <h3 class="panel-title" style="text-align: center;">Khách hàng mới</h3>
+                        <h3 id="new_user_best_score" class="label label-success" style="display: block;font-size: 16px;">Giống nhau: 35.50%</h3>
+                    </div>  
+                </div>
+                <div class="modal-body" style="padding: 10px 15px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" onclick="check_fake_user_callback();" data-dismiss="modal">Kiểm tra dữ liệu người dùng</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="newUserModalKeepTracking">Tiếp tục theo dõi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kiểm tra người dùng -->
+    <div id="checkIdModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 60%;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background: #d9534f;color: white;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="col-md-5 col-lg-5" align="left" style="padding: 0px;"> 
+                            <h3 class="panel-title">Kiểm tra người dùng trong hệ thống</h3>
+                        </div>
+                </div>
+                <div class="modal-body" style="padding: 0 15px;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Báo bảo vệ</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal mơi -->
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 80%;">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="border-radius: 0px;">
+                <div class="modal-header" style="background-color: #82B2CE;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="clearfix colelem" id="u3855"><!-- group -->
+                            <div class="clearfix grpelem" id="u3856-4"><!-- content -->
+                                <p style="text-align: left;">ĐÃ TỪNG GIAO DỊCH TRƯỚC ĐÂY</p>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-body" style="padding: 0px;">
+                    <div class="position_content" id="u3853_position_content">
+                        <div class="clearfix colelem" id="ppu3858-4"><!-- group -->
+                            <div class="clearfix grpelem" id="pu3858-4"><!-- column -->
+                                <div class="clearfix colelem" id="u3858-4"><!-- content -->
+                                    <p>NHẬN DẠNG KHUÔN MẶT</p>
+                                </div>
+                                <div class="clearfix colelem" id="pu3879"><!-- group -->
+                                    <div class="clearfix grpelem" id="u3879"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3892-4"><!-- content -->
+                                            <img id="scanned_cmt" class="img-rounded" width="250" height="160" style="">
+                                        </div>
+                                    </div>
+                                    <div class="clearfix grpelem" id="u3883"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3905-4"><!-- content -->
+                                            <img class="img-rounded" width="250" height="160" style="position: absolute;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix colelem" id="u3888"><!-- group -->
+                                    <div class="clearfix grpelem" id="u3891-4"><!-- content -->
+                                        <p>Giống nhau %</p>
+                                    </div>
+                                </div>
+                                <div class="clearfix colelem" id="pu3881"><!-- group -->
+                                    <div class="clearfix grpelem" id="u3881"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3893-4"><!-- content -->
+                                            <p>Ảnh cũ</p>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix grpelem" id="u3884"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3895-4"><!-- content -->
+                                            <p>Ảnh đang giao dịch</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix colelem" id="u3889"><!-- group -->
+                                    <div class="clearfix grpelem" id="u3897-4"><!-- content -->
+                                        <p>Giống nhau %</p>
+                                    </div>
+                                </div>
+                                <div class="clearfix colelem" id="pu3882"><!-- group -->
+                                    <div class="clearfix grpelem" id="u3882"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3894-4"><!-- content -->
+                                            <p>Ảnh lần gần nhất</p>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix grpelem" id="u3885"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3896-4"><!-- content -->
+                                            <p>Ảnh đang giao dịch</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix colelem" id="u3890"><!-- group -->
+                                    <div class="clearfix grpelem" id="u3898-4"><!-- content -->
+                                        <p>Giống nhau %</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix grpelem" id="u3859-4"><!-- content -->
+                                <p>HỒ SƠ</p>
+                            </div>
+                            <div class="grpelem" id="u3899"><!-- simple frame --></div>
+                            <div class="grpelem" id="u3900"><!-- simple frame --></div>
+                            <div class="rgba-background clearfix grpelem" id="u3901"><!-- column -->
+                                <div class="clearfix colelem" id="pu3903"><!-- group -->
+                                    <div class="clearfix grpelem" id="u3903"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3906-4"><!-- content -->
+                                            <p>Ảnh</p>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix grpelem" id="u3904"><!-- group -->
+                                        <div class="clearfix grpelem" id="u3907-4"><!-- content -->
+                                            <p>CMT</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix colelem" id="u3902-35"><!-- content -->
+                                    <p>NAME:</p>
+                                    <p>&nbsp;</p>
+                                    <p>Gender:</p>
+                                    <p>&nbsp;</p>
+                                    <p>Date of birth:</p>
+                                    <p>&nbsp;</p>
+                                    <p>Home Adress:</p>
+                                    <p>&nbsp;</p>
+                                    <p>Goverment ID:</p>
+                                    <p>&nbsp;</p>
+                                    <p>Email:</p>
+                                    <p>&nbsp;</p>
+                                    <p>Phone Number:</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: none;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="blacklistKeepTracking">Tiếp tục theo dõi</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="addBlackList" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+  
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Thêm danh sách đen</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="email">Tên:</label>
+                            <input type="text" class="form-control" id="blackname">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Số CMT:</label>
+                            <input type="text" class="form-control" id="blackcmt">
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Ảnh CMT:</label>
+                            <input type="file" class="form-control" id="blackfile_cmt">
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Ảnh Mặt :</label>
+                            <input type="file" class="form-control" id="blackfile_face">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="addBlackList();">Add</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+  
+        </div>
+    </div>
+    <script type="text/javascript" src="static/js/callback.js"></script>
+</body>
+</html>

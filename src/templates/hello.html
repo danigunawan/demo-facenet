@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Portfolio Item - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="static/css/portfolio-item.css" rel="stylesheet">
+    <style type="text/css" media="screen">
+        .grid-item {     
+            width: 24%;
+            margin-bottom: 10px;
+            float: left;
+            margin-right: 10px; 
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Portfolio Item Heading -->
+        <div class="row">
+            <div class="col-lg-12" style="padding: 0px;">
+                <h1 class="page-header" id="title">Demo xác thực người với CSDL</h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Portfolio Item Row -->
+        <div class="row">
+
+            <div class="col-md-8 col-md-offset-3">
+                <img class="img-responsive" id="main_image" alt="" onerror="myFunction()">
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Related Projects Row -->
+        <div class="row">
+            <img src="http://10.0.15.93:8080/video" width="557" height="418" class="img-responsive" alt="" style="margin: 0 auto;"> 
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+
+            <div class="col-lg-12" style="padding-left: 0px;margin-bottom: 20px;">
+                <div class="col-lg-6" style="padding-left: 0px">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name">
+                  </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <button type="button" onclick="capturePerson()" class="btn btn-primary">Chụp ảnh người</button>
+                </div>
+            </div>
+
+            <h3 class="page-header">Ảnh xác thực</h3>
+            <div class="row">
+                <img src="" id="img_cmt" class="img-responsive" alt="" style="margin: 0 auto;">
+            </div>
+
+            <h3 class="page-header">So sánh ảnh với CSDL</h3>
+            <div class="grid" id="seg_box">
+                
+            </div>
+            
+        </div>
+        <!-- /.row -->
+
+        <hr>
+    </div>
+    <!-- /.container -->
+
+    <!-- modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Đang xử lí.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal -->
+
+    <!-- jQuery -->
+    <script src="static/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/masonry.pkgd.min.js"></script>
+    
+    <script type="text/javascript">
+        $('.grid').masonry({
+            // options
+            itemSelector: '.grid-item',
+            columnWidth: '.grid-item',
+            percentPosition: true
+        });
+
+        $.urlParam = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return results[1] || 0;
+            }
+        }
+
+        function capturePerson(){
+            formData = new FormData();
+            formData.append("owner", $("#name").val());
+            $("#myModal").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: "/detectobject/compare_with_database",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $("#myModal").modal("hide");
+
+                    file_cmt = data["image_query"].replace("/data/image-processing/facenet/data", "/facenet")
+                    $("#img_cmt").attr("src", file_cmt);
+
+                    $("#seg_box").children().remove();
+                    strVar = "";
+
+                    // result_file = data["file_name"].substring(1, data["result_file"].length - 1);
+                    // result_file = result_file.split(",");
+                    result_file = data["file_name"];
+
+                    result_dist = data["result"];
+
+                    for (i = 1; i < result_file.length; i++) {
+                        url = result_file[i].replace("/data/image-processing/facenet/data", "facenet");
+
+                        url = url.replace("'" , '');
+                        console.log(url);
+                        strVar += "<div class=\"grid-item\">";
+                        strVar += "<img class=\"img-responsive\" src=\"/" + url + "\">";
+                        strVar += "<span>Độ chính xác: " + parseFloat(parseFloat(result_dist[i]) * 100).toFixed(2) + " %</span>"
+                        strVar += "             <\/div>";
+                    }
+                    $("#seg_box").append(strVar);
+                },
+                error: function(error) {
+                    $("#myModal").modal("hide");
+                    alert("Có lỗi, hãy thử lại!")
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
